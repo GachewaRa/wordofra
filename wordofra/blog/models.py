@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from accounts.models import CustomUser
 
+
 # Category model
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -34,6 +35,8 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+from tinymce.models import HTMLField
+
 # Post model
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -43,7 +46,8 @@ class Post(models.Model):
 
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, blank=True, editable=False)
-    content = models.TextField()
+    content = HTMLField()  # Use TinyMCE for content editing
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Assume you're using the default User model
     category = models.ForeignKey(Category, related_name='posts', on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
