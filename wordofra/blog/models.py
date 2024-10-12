@@ -68,9 +68,19 @@ class Post(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+class Quote(models.Model):
+    content = models.TextField()  # The quote content
+    owner = models.CharField(max_length=255)  # The person who said the quote
+    owner_image = models.ImageField(upload_to='owner_images/', blank=True, null=True)  # Optional image of the quote owner
+    created_at = models.DateTimeField(auto_now_add=True)  # When the quote was added
+
+    def __str__(self):
+        return f'Quote by {self.owner}'
+
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE, null=True)
+    quote = models.ForeignKey(Quote, related_name='comments', on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
