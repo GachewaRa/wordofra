@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from accounts.models import CustomUser
+from tinymce.models import HTMLField
 
 
 # Category model
@@ -34,8 +35,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-
-from tinymce.models import HTMLField
 
 # Post model
 class Post(models.Model):
