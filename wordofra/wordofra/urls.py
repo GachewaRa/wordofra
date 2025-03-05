@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from accounts.views import UserLoginView # Import custom views
 from rest_framework_simplejwt.views import TokenRefreshView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,4 +37,15 @@ urlpatterns = [
     # Separate namespace for API endpoints
     path('api/blog/', include('blog.urls')),  # Blog-related API endpoints
     path('api/portfolio/', include('portfolio.urls')),  # Portfolio-related API endpoints
+
+
+
+    # API schema in JSON format
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    
+    # Swagger UI
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    
+    # ReDoc UI
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
