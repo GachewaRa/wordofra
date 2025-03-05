@@ -6,21 +6,29 @@ from tinymce.models import HTMLField
 
 
 # Category model
+
+def unique_slugify(instance, value, slug_field):
+    """Generate a unique slug for a model instance."""
+    slug = slugify(value)
+    model = instance.__class__
+    count = 1
+    while model.objects.filter(**{slug_field: slug}).exists():
+        slug = f"{slug}-{count}"
+        count += 1
+    return slug
+
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True, editable=False)
 
     def save(self, *args, **kwargs):
-        # Automatically generate slug from category name if not provided
         if not self.slug:
-            self.slug = slugify(self.name)
-        super(Category, self).save(*args, **kwargs)
+            self.slug = unique_slugify(self, self.name, 'slug')
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
-    class Meta:
-        verbose_name_plural = 'Categories'
 
 # Tag model
 class Tag(models.Model):
@@ -47,7 +55,7 @@ class Post(models.Model):
     slug = models.SlugField(max_length=200, unique=True, blank=True, editable=False)
     content = HTMLField()  # Use TinyMCE for content editing
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Assume you're using the default User model
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name='posts', on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -78,12 +86,17 @@ class Quote(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE, null=True)
-    quote = models.ForeignKey(Quote, related_name='comments', on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE, null=True, blank=True)
+    quote = models.ForeignKey(Quote, related_name='comments', on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        if not self.post and not self.quote:
+            raise ValueError("A comment must be linked to either a Post or a Quote.")
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f'Comment by {self.user} on {self.post}'
+        return f'Comment by {self.user} on {self.post if self.post else self.quote}'

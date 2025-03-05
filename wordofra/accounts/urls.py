@@ -5,15 +5,8 @@ from .views import (
     NewsletterUnsubscribeView, UserNewsletterUnsubscribeView
 )
 
+
 urlpatterns = [
-    # Djoser URLs
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
-    
-    # Custom JWT token with our extended functionality
-    path('auth/jwt/custom-login/', UserLoginView.as_view(), name='custom-login'),
-    path('auth/jwt/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    
     # Newsletter related endpoints
     path('newsletter/subscribe/', NewsletterSubscriptionView.as_view(), name='newsletter-subscribe'),
     path('newsletter/opt-in/', NewsletterOptInView.as_view(), name='newsletter-opt-in'),
