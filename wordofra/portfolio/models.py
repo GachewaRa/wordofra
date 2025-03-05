@@ -29,9 +29,18 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)  # Auto-generate slug from title
-        super(Project, self).save(*args, **kwargs)
+        if not self.slug:  # Only generate slug if it's not set
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+
+            while Project.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

@@ -1,13 +1,23 @@
+from django.shortcuts import get_object_or_404
 from portfolio.models import Project, Service
 from portfolio.serializers import ProjectSerializer, ServiceSerializer
 from rest_framework import viewsets, permissions
+from rest_framework.response import Response 
 
-# Create your views here.
-# Portfolio App Viewsets
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Project.objects.all().order_by('-created_at')
+    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [permissions.AllowAny]
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Fetch a single project by slug instead of ID.
+        """
+        slug = kwargs.get('pk')  # DRF defaults to 'pk'
+        project = get_object_or_404(Project, slug=slug)
+
+        serializer = self.get_serializer(project)
+        return Response(serializer.data)
+
 
 class ServiceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Service.objects.all()
