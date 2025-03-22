@@ -57,6 +57,7 @@ class AuthenticationTests(APITestCase):
             'password': 'TestPass123'
         }
         response = self.client.post(self.login_url, login_data)
+        # print("RESPONSE DATA: ", response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('access', response.data)
         self.assertIn('refresh', response.data)

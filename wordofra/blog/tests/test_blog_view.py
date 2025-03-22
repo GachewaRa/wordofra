@@ -91,7 +91,7 @@ class TestCategoryViewSet:
         """Test retrieving a single category."""
         url = reverse('category-detail', kwargs={'pk': category.pk})
         response = api_client.get(url)
-        
+        print("CATEGORY DETAIL:", response.data)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['name'] == category.name
 

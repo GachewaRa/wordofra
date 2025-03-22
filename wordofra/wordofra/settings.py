@@ -14,7 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6@*xl5hx96(l(yk)wzjx+u-3g^4ol$8$dz7%c$n8iu&(nxiy(v'
+SECRET_KEY = os.getenv('SECRET_KEY')
+# print(f"Loaded SECRET_KEY: {SECRET_KEY}******")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -52,12 +54,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'djoser',
+    'corsheaders',
     
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -177,8 +181,8 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '5/minute',            # Limit anonymous users to 5 requests per minute
-        'user': '20/minute',           # Limit authenticated users to 20 requests per minute
+        'anon': '45/minute',            # Limit anonymous users to 5 requests per minute
+        'user': '50/minute',           # Limit authenticated users to 20 requests per minute
         'login_attempts': '5/hour',    # Specific limit for login endpoints (will need custom throttle class)
     },
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -206,6 +210,7 @@ DJOSER = {
     'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
+    "SEND_CONFIRMATION_EMAIL": True,
     "TOKEN_MODEL": None,
 }
 
@@ -218,3 +223,19 @@ if 'test' in sys.argv:
         'user': None,
         'login_attempts': None,  # Disable custom login rate limit
     }
+
+
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",  # Or your SvelteKit development URL
+#     "http://127.0.0.1:5173",  # If you use 127.0.0.1
+#     # Add your production URL(s) here when you deploy
+# ]
+
+
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.yourmail.com"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "your@email.com"
+# EMAIL_HOST_PASSWORD = "yourpassword"
+# DEFAULT_FROM_EMAIL = "noreply@yourdomain.com"
