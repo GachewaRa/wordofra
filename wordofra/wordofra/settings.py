@@ -97,14 +97,29 @@ WSGI_APPLICATION = 'wordofra.wsgi.application'
 
 # Load environment variables from .env file
 load_dotenv()
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'my_portfolio_db',  # Your PostgreSQL database name
+#         'USER': os.getenv('DB_USERNAME'),
+#         'PASSWORD': os.getenv('DB_PASSWORD'),  # Your PostgreSQL user password
+#         'HOST': 'localhost',
+#         'PORT': '5432',  # Default port for PostgreSQL
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'my_portfolio_db',  # Your PostgreSQL database name
-        'USER': os.getenv('DB_USERNAME'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),  # Your PostgreSQL user password
-        'HOST': 'localhost',
-        'PORT': '5432',  # Default port for PostgreSQL
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT'),
+        'OPTIONS': {
+            'sslmode': os.getenv('DATABASE_SSL_MODE', 'require'),
+            'sslrootcert': os.path.join(BASE_DIR, os.getenv('DATABASE_CA_CERT')),
+        },
     }
 }
 
