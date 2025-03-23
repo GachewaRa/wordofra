@@ -284,3 +284,26 @@ CORS_ALLOW_CREDENTIALS = True
 # EMAIL_HOST_USER = "your@email.com"
 # EMAIL_HOST_PASSWORD = "yourpassword"
 # DEFAULT_FROM_EMAIL = "noreply@yourdomain.com"
+
+
+# Add this near the end of settings.py
+if not DEBUG:
+    import os
+    import shutil
+    
+    # Create target directory
+    os.makedirs(WHITENOISE_ROOT, exist_ok=True)
+    
+    # Copy files from MEDIA_ROOT to WHITENOISE_ROOT
+    for root, dirs, files in os.walk(MEDIA_ROOT):
+        for file in files:
+            source_path = os.path.join(root, file)
+            rel_path = os.path.relpath(source_path, MEDIA_ROOT)
+            target_path = os.path.join(WHITENOISE_ROOT, rel_path)
+            
+            # Ensure target directory exists
+            os.makedirs(os.path.dirname(target_path), exist_ok=True)
+            
+            # Copy only if target doesn't exist or is older
+            if not os.path.exists(target_path) or os.path.getmtime(source_path) > os.path.getmtime(target_path):
+                shutil.copy2(source_path, target_path)
