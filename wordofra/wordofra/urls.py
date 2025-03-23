@@ -17,12 +17,18 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path, include
 from accounts.views import UserLoginView # Import custom views
 from rest_framework_simplejwt.views import TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+
+def home(request):
+    return HttpResponse("Hello, world! Your app is working.")
+
 urlpatterns = [
+    path("", home),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('tinymce/', include('tinymce.urls')),
