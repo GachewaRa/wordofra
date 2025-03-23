@@ -188,8 +188,15 @@ AUTHENTICATION_BACKENDS = [
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Media files
+MEDIA_URL = "/media/"  # Set a public URL for media
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # Where uploaded files are stored
+
+# Copy media files to staticfiles for Whitenoise
+WHITENOISE_MEDIA_PREFIX = "/media/"
+STATICFILES_DIRS = [MEDIA_ROOT]  # Tell Whitenoise to serve media files
+
 
 TINYMCE_DEFAULT_CONFIG = {
     "height": "500px",
