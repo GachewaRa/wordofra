@@ -23,6 +23,9 @@ from accounts.views import UserLoginView # Import custom views
 from rest_framework_simplejwt.views import TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+from django.urls import path, re_path
+from django.views.static import serve
+
 
 def home(request):
     return HttpResponse("Hello, world! Your app is working.")
