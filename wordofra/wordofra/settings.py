@@ -257,12 +257,15 @@ CORS_ALLOWED_ORIGINS = [
     # Add your production URL(s) here when you deploy
 ]
 
-CORS_ALLOW_HEADERS = [
-    "content-type",
-    "authorization",
-]
+# If you need to allow credentials
+CORS_ALLOW_CREDENTIALS = True
 
-CORS_EXPOSE_HEADERS = ["Content-Disposition"]
+# CORS_ALLOW_HEADERS = [
+#     "content-type",
+#     "authorization",
+# ]
+
+# CORS_EXPOSE_HEADERS = ["Content-Disposition"]
 
 
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
