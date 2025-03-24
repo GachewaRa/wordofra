@@ -35,7 +35,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "wordofra.onrender.com",
@@ -216,6 +216,11 @@ CLOUDINARY_STORAGE = {
     "API_SECRET": os.getenv('CLOUDINARY_API_SECRET'),
 }
 
+cloudinary.config( 
+  cloud_name = os.getenv("CLOUD_NAME"),  
+  api_key = os.getenv("CLOUDINARY_API_KEY"),  
+  api_secret = os.getenv("CLOUDINARY_API_SECRET")  
+)
 
 
 TINYMCE_DEFAULT_CONFIG = {
