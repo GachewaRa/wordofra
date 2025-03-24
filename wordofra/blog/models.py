@@ -77,8 +77,8 @@ class Post(models.Model):
         ordering = ['-created_at']
 
 class Quote(models.Model):
-    content = models.TextField()  # The quote content
-    owner = models.CharField(max_length=255)  # The person who said the quote
+    content = models.TextField()
+    owner = models.CharField(max_length=255) 
     owner_image = CloudinaryField('image', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) 
 
