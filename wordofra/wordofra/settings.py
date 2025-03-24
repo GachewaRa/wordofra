@@ -15,6 +15,11 @@ from dotenv import load_dotenv
 import os
 import base64
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -61,6 +66,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'djoser',
     'corsheaders',
+    'cloudinary',
+    'cloudinary_storage',
     
 ]
 
@@ -105,7 +112,7 @@ WSGI_APPLICATION = 'wordofra.wsgi.application'
 # settings.py
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
@@ -194,9 +201,20 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 WHITENOISE_ROOT = os.path.join(BASE_DIR, 'staticfiles', 'media')
 
 # Keep your existing media settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# Optional: Define MEDIA_URL if you want
+MEDIA_URL = f"https://res.cloudinary.com/dyr0ityfq/"
+
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv('CLOUD_NAME'),
+    "API_KEY": os.getenv('CLOUDINARY_API_KEY'),
+    "API_SECRET": os.getenv('CLOUDINARY_API_SECRET'),
+}
 
 
 
@@ -284,26 +302,3 @@ CORS_ALLOW_CREDENTIALS = True
 # EMAIL_HOST_USER = "your@email.com"
 # EMAIL_HOST_PASSWORD = "yourpassword"
 # DEFAULT_FROM_EMAIL = "noreply@yourdomain.com"
-
-
-# Add this near the end of settings.py
-if not DEBUG:
-    import os
-    import shutil
-    
-    # Create target directory
-    os.makedirs(WHITENOISE_ROOT, exist_ok=True)
-    
-    # Copy files from MEDIA_ROOT to WHITENOISE_ROOT
-    for root, dirs, files in os.walk(MEDIA_ROOT):
-        for file in files:
-            source_path = os.path.join(root, file)
-            rel_path = os.path.relpath(source_path, MEDIA_ROOT)
-            target_path = os.path.join(WHITENOISE_ROOT, rel_path)
-            
-            # Ensure target directory exists
-            os.makedirs(os.path.dirname(target_path), exist_ok=True)
-            
-            # Copy only if target doesn't exist or is older
-            if not os.path.exists(target_path) or os.path.getmtime(source_path) > os.path.getmtime(target_path):
-                shutil.copy2(source_path, target_path)

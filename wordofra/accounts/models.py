@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.throttling import AnonRateThrottle
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
@@ -48,7 +49,7 @@ class CustomUser(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    profile_picture = CloudinaryField('image', blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     location = models.CharField(max_length=30, blank=True)
 

@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 from django.utils.text import slugify
@@ -7,7 +8,7 @@ from django.utils.text import slugify
 class Service(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    icon = models.ImageField(upload_to='service_icons/', blank=True, null=True)  # Optional icon for each service
+    icon = CloudinaryField('image', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -22,7 +23,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, blank=True, editable=False)
     description = models.TextField()
-    image = models.ImageField(upload_to='project_images/', blank=True, null=True)  # Optional image for each project
+    image = CloudinaryField('image', blank=True, null=True)
     link = models.URLField(max_length=300, blank=True)  # Optional link to live project or repo
     tags = models.CharField(max_length=100, blank=True)  # Comma-separated tags (e.g., 'Python, Django, API')
     created_at = models.DateTimeField(auto_now_add=True)

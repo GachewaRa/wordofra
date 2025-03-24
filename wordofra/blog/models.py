@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from accounts.models import CustomUser
 from tinymce.models import HTMLField
+from cloudinary.models import CloudinaryField
 
 
 # Category model
@@ -54,7 +55,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, blank=True, editable=False)
     content = HTMLField()  # Use TinyMCE for content editing
-    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name='posts', on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
@@ -78,8 +79,8 @@ class Post(models.Model):
 class Quote(models.Model):
     content = models.TextField()  # The quote content
     owner = models.CharField(max_length=255)  # The person who said the quote
-    owner_image = models.ImageField(upload_to='owner_images/', blank=True, null=True)  # Optional image of the quote owner
-    created_at = models.DateTimeField(auto_now_add=True)  # When the quote was added
+    owner_image = CloudinaryField('image', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True) 
 
     def __str__(self):
         return f'Quote by {self.owner}'
