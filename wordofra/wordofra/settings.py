@@ -284,7 +284,7 @@ if 'test' in sys.argv:
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Or your SvelteKit development URL
+    # "http://localhost:5173",  # Or your SvelteKit development URL
     "https://wordofra.vercel.app",
     # Add your production URL(s) here when you deploy
 ]
