@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, permissions
 from .models import Post, Category, Tag, Comment, Quote
 from .serializers import (
-    PostSerializer, CategorySerializer, TagSerializer,
+    PostSerializer, PostListSerializer, CategorySerializer, TagSerializer,
     CommentSerializer, QuoteSerializer,
 )
 
@@ -29,6 +29,11 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['title', 'content']
     ordering_fields = ['created_at']
     ordering = ['-created_at']  # Default ordering (newest first)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return PostListSerializer
+        return PostSerializer
 
     def get_queryset(self):
         """
